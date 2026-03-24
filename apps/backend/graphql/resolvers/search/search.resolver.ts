@@ -185,13 +185,13 @@ export const searchResolver = {
         if (!id) {
           id = uuid();
 
-         ctx.res.setHeader("Set-Cookie",[serialize("guestId", id, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          maxAge: 7 * 24 * 60 * 60,
-          path: "/",
-        })])
+        await ctx.request.cookieStore.set("guestId", id, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60,
+      });
         }
 
         searchCachingId = `guest:${id}:recentSearch`;

@@ -35,23 +35,24 @@ async function startServer() {
   };
 
   const yoga = createYoga({
-    schema,
-    graphqlEndpoint: "/graphql",
-    cors: {
-      origin: [
-        "http://localhost:3000",
-        "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app",
-        "https://zynora-git-main-ankitshukla2405s-projects.vercel.app",
-      ],
-      credentials: true,
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "idempotency-key",
-        "payment-idempotency-key",
-      ],
-    },
-    plugins: [useCookies()],
+  schema,
+  graphqlEndpoint: "/graphql",
+  cors: {
+    origin: [
+      "http://localhost:3000",
+      "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app",
+      "https://zynora-git-main-ankitshukla2405s-projects.vercel.app",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "idempotency-key",
+      "payment-idempotency-key",
+    ],
+  },
+  plugins: [useCookies()],
 
     context: async (ctx) => {
       const { request } = ctx;
@@ -78,17 +79,6 @@ async function startServer() {
   });
 
   const server = http.createServer(async (req, res) => {
-    if (req.method === "OPTIONS") {
-      res.writeHead(204, {
-        "Access-Control-Allow-Origin": req.headers.origin || "*",
-        "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-        "Access-Control-Allow-Headers":
-          "Content-Type, Authorization, idempotency-key, payment-idempotency-key",
-        "Access-Control-Allow-Credentials": "true",
-      });
-      res.end();
-      return;
-    }
 
     if (req.url === "/api/webhooks/stripe" && req.method === "POST") {
       try {

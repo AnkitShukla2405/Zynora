@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ../apps/backend
+    container_name: zynora-backend
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      - PORT=4000
+      - FRONTEND_URL=${FRONTEND_URL}
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    container_name: zynora-redis
+    restart: always
+
+volumes:
+  mongo_data:

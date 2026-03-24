@@ -1,9 +1,10 @@
 import { transporter } from "@/lib/mail";
+import { resend } from "@/lib/resend";
 
 export const MailService = {
   sendOtpMail: async (email: string, otp: string) => {
     try {
-      await transporter.sendMail({
+      await resend.emails.send({
         from: `"Your App" <${process.env.SMTP_MAIL}>`,
         to: email,
         subject: "Your OTP Code",
@@ -65,7 +66,7 @@ export const MailService = {
 
   sendWelcomeMessage: async (email: string) => {
     try {
-      await transporter.sendMail({
+      await resend.emails.send({
         from: `"Your App" <${process.env.SMTP_MAIL}>`,
         to: email,
         subject: "Welcome from Zynora",

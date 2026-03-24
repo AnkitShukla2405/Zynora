@@ -26,10 +26,7 @@ const REFRESH_TOKEN_MUTATION = gql`
 `;
 
 const httpLink = new HttpLink({
-  uri: () =>
-    typeof window !== "undefined"
-      ? `http://${window.location.hostname}:4000/graphql`
-      : process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/graphql",
+  uri: process.env.NEXT_PUBLIC_API_URL,
   credentials: "include",
 });
 

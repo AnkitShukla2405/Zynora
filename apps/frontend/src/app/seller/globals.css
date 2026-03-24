@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  /* Zynora Premium Palette */
+  --color-background: #F9F8F6;
+  --color-surface: #FFFFFF;
+
+  --color-primary: #722F37;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-hover: #5A232B;
+
+  --color-secondary: #E5E7EB; 
+  --color-secondary-foreground: #1F2937;
+
+  --color-success: #4A7C59;
+  --color-success-foreground: #FFFFFF;
+  --color-warning: #D97706;
+  --color-danger: #C53030;
+  
+  --color-border: #E5E7EB;
+  --color-input: #E5E7EB;
+  --color-ring: #722F37;
+  
+  --color-muted: #F3F4F6;
+  --color-muted-foreground: #6B7280;
+
+  /* Font settings if needed, but default sans is usually fine. 
+     We can override --font-sans if we import a specific font in layout.tsx */
+}
+
+/* Base styles */
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: #1F2937; /* Gray-800 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}

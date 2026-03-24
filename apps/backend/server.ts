@@ -38,7 +38,7 @@ async function startServer() {
     schema,
     graphqlEndpoint: "/graphql",
     cors: {
-      origin: ["http://localhost:3000", "http://10.96.250.165:3000"],
+      origin: ["http://localhost:3000", "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app/"],
       credentials: true,
       allowedHeaders: [
         "Content-Type",

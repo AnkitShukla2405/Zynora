@@ -38,19 +38,19 @@ async function startServer() {
     schema,
     graphqlEndpoint: "/graphql",
     cors: {
-      origin: [
-        "http://localhost:3000",
-        "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app",
-        "https://zynora-git-main-ankitshukla2405s-projects.vercel.app"
-      ],
-      credentials: true,
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "idempotency-key",
-        "payment-idempotency-key",
-      ],
-    },
+  origin: [
+    "http://localhost:3000",
+    "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app",
+    "https://zynora-git-main-ankitshukla2405s-projects.vercel.app",
+  ],
+  credentials: true,
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "idempotency-key",
+    "payment-idempotency-key",
+  ],
+},
     plugins: [useCookies()],
 
     context: async (ctx) => {

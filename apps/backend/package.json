@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "_moduleAliases": {
-  "@": "./dist"
-},
+    "@": "./dist"
+  },
   "directories": {
     "lib": "lib"
   },
@@ -32,6 +32,7 @@
     "mongoose": "^9.3.0",
     "nodemailer": "^8.0.2",
     "redis": "^5.11.0",
+    "resend": "^6.9.4",
     "stripe": "^20.4.1",
     "uuid": "^13.0.0",
     "zod": "^4.3.6"

@@ -4,7 +4,7 @@ import { resend } from "@/lib/resend";
 export const MailService = {
   sendOtpMail: async (email: string, otp: string) => {
     try {
-      await resend.emails.send({
+      const response = await resend.emails.send({
         from: `"Your App" <${process.env.SMTP_MAIL}>`,
         to: email,
         subject: "Your OTP Code",
@@ -57,6 +57,7 @@ export const MailService = {
         `,
       });
 
+      console.log("Resend response:", response);
       return true;
     } catch (error: any) {
       console.error("Email sending failed:", error.message);

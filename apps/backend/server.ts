@@ -41,7 +41,7 @@ async function startServer() {
     origin: [
       "http://localhost:3000",
       "https://zynora-hdi6qdp9p-ankitshukla2405s-projects.vercel.app",
-      "https://zynora-git-main-ankitshukla2405s-projects.vercel.app",
+      "https://zynora-green.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],

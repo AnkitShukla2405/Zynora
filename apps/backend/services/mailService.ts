@@ -5,7 +5,7 @@ export const MailService = {
   sendOtpMail: async (email: string, otp: string) => {
     try {
       const response = await resend.emails.send({
-        from: `"Your App" <${process.env.SMTP_MAIL}>`,
+        from: "Zynora <onboarding@resend.dev>",
         to: email,
         subject: "Your OTP Code",
         html: `

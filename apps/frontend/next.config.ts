@@ -1,27 +1,25 @@
-/** @type {import('next').NextConfig} */
+import path from "path";
+
 const nextConfig = {
+  outputFileTracingRoot: path.join(__dirname),
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "d3pjqtpyq138wk.cloudfront.net", 
+        hostname: "d3pjqtpyq138wk.cloudfront.net",
       },
     ],
   },
 
   async rewrites() {
-    // Determine if we are on Vercel or local
-    const isProd = process.env.NODE_ENV === 'production';
-    
     return [
       {
         source: "/api/graphql",
-        destination: isProd 
-          ? "http://zynora-api.duckdns.org/graphql" 
-          : "http://localhost:4000/graphql",
+        destination: "http://localhost:4000/graphql",
       },
     ];
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;

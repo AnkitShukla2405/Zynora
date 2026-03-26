@@ -59,16 +59,16 @@ export const refreshResolver = {
         // 6. Set Cookies via Yoga response
         await ctx.request.cookieStore.set("accessToken", newAccessToken, {
           httpOnly: true,
-          secure: false,
-          sameSite: "lax",
+          secure: true,
+          sameSite: "none",
           path: "/",
           maxAge: 15 * 60,
         });
 
         await ctx.request.cookieStore.set("refreshToken", newRefreshToken, {
           httpOnly: true,
-          secure: false,
-          sameSite: "lax",
+          secure: true,
+          sameSite: "none",
           path: "/",
           maxAge: 30 * 24 * 60 * 60,
         });
@@ -83,15 +83,15 @@ export const refreshResolver = {
         await ctx.request.cookieStore.set("accessToken", "", {
           httpOnly: true,
           secure: false,
-          sameSite: "lax",
+          sameSite: "none",
           path: "/",
           maxAge: 0, // 👈 clear
         });
 
         await ctx.request.cookieStore.set("refreshToken", "", {
           httpOnly: true,
-          secure: false,
-          sameSite: "lax",
+          secure: true,
+          sameSite: "none",
           path: "/",
           maxAge: 0, // 👈 clear
         });

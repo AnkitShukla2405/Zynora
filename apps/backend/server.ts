@@ -11,9 +11,11 @@ import dbConnect from "./lib/dbConnect";
 import { typeDefs, resolvers } from "./graphql";
 import { handlePaymentSuccess } from "./services/stripe/handlePaymentSucess";
 import { handlePaymentFailure } from "./services/stripe/handlePaymentFailure";
+import { connectRedis } from "./lib/redis";
 
 async function startServer() {
   await dbConnect();
+  await connectRedis();
 
   const schema = createSchema({
     typeDefs,
@@ -55,7 +57,18 @@ async function startServer() {
   plugins: [useCookies()],
 
     context: async (ctx) => {
+      const forwardedProto =
+  ctx.request.headers.get("x-forwarded-proto");
+
+const proto =
+  forwardedProto && forwardedProto.includes("https")
+    ? "https"
+    : "http";
+
+console.log("PROTO:", proto);
       const { request } = ctx;
+
+      console.log("Request:", request)
       const cookieHeader = request.headers.get("cookie") || "";
       const cookies = parse(cookieHeader);
 

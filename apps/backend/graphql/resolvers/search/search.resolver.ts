@@ -17,7 +17,7 @@ type ProductArgs = {
 
 export const searchResolver = {
   Query: {
-    search: async (_: any, { filter }: any, {ctx}: {ctx: any}) => {
+    search: async (_: any, { filter }: any, ctx: any) => {
       const {
         search,
         brands,
@@ -168,7 +168,7 @@ export const searchResolver = {
     searchSuggestions: async (
       _: unknown,
       { query }: { query: string },
-      { user, guestId, ctx }: { user: any; guestId: string, ctx: any },
+      { user, guestId, request }: { user: any; guestId: string, request: any },
     ) => {
       const q = query.trim();
       if (!q) return [];
@@ -185,10 +185,10 @@ export const searchResolver = {
         if (!id) {
           id = uuid();
 
-        await ctx.request.cookieStore.set("guestId", id, {
+        await request.cookieStore.set("guestId", id, {
         httpOnly: true,
         secure: true,
-        sameSite: "lax",
+        sameSite: "none",
         path: "/",
         maxAge: 30 * 24 * 60 * 60,
       });

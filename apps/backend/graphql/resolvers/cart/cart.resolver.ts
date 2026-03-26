@@ -44,6 +44,9 @@ export const cartResolver = {
               0,
             );
 
+            console.log("Cart Result:", result);
+            console.log("Cart Length:", cartLength);
+
             return {
               result,
               cartLength,
@@ -114,11 +117,11 @@ export const cartResolver = {
       {
         user,
         guestId,
-        res,
+        request,
       }: {
         user: any;
         guestId: any;
-        res: any;
+        request: any;
       },
     ) => {
       if (!productId || !variantId || qty <= 0) {
@@ -138,16 +141,13 @@ export const cartResolver = {
       if (!guestId) {
         const currentGuestId = uuid();
 
-        res.setHeader(
-          "Set-Cookie",
-          serialize("guestId", currentGuestId, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            path: "/",
-            maxAge: 60 * 60 * 24 * 7,
-          }),
-        );
+                await request.cookieStore.set("guestId", currentGuestId, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 30 * 24 * 60 * 60,
+      });
 
         await guestUserAddToCart(currentGuestId, productId, variantId, qty);
       } else {

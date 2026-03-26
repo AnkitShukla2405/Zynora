@@ -94,24 +94,24 @@ export const signupResolver = {
 
       await ctx.request.cookieStore.set("accessToken", accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 15 * 60,
       });
 
       await ctx.request.cookieStore.set("refreshToken", newRefreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 30 * 24 * 60 * 60,
       });
 
       await ctx.request.cookieStore.set("guestId", "", {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 0,
       });
@@ -175,24 +175,24 @@ export const signupResolver = {
 
       await ctx.request.cookieStore.set("accessToken", accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 15 * 60,
       });
 
       await ctx.request.cookieStore.set("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 30 * 24 * 60 * 60,
       });
 
       await ctx.request.cookieStore.set("guestId", "", {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: true,
+        sameSite: "none",
         path: "/",
         maxAge: 0,
       });

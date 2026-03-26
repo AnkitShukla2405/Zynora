@@ -9,18 +9,19 @@ const nextConfig = {
     ],
   },
 
-    async rewrites() {
+  async rewrites() {
+    // Determine if we are on Vercel or local
+    const isProd = process.env.NODE_ENV === 'production';
+    
     return [
       {
         source: "/api/graphql",
-        destination: "http://localhost:4000/graphql",
+        destination: isProd 
+          ? "http://zynora-api.duckdns.org/graphql" 
+          : "http://localhost:4000/graphql",
       },
     ];
   },
 };
-
-
-
-
 
 module.exports = nextConfig;

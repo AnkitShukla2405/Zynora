@@ -26,7 +26,7 @@ const REFRESH_TOKEN_MUTATION = gql`
 `;
 
 const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_API_URL,
+  uri: "/api/graphql",
   credentials: "include",
 });
 

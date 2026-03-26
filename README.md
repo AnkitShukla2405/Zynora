@@ -22,7 +22,7 @@
 
 <br/>
 
-[🚀 View Live Demo](#) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/AnkitShukla2405/Zynora/issues) &nbsp;·&nbsp; [⭐ Star on GitHub](https://github.com/AnkitShukla2405/Zynora) &nbsp;·&nbsp; [👔 Connect on LinkedIn](https://www.linkedin.com/in/ankitshukladev)
+[🚀 View Live Demo](https://zynora.duckdns.org/) &nbsp;·&nbsp; [🐛 Report Bug](https://github.com/AnkitShukla2405/Zynora/issues) &nbsp;·&nbsp; [⭐ Star on GitHub](https://github.com/AnkitShukla2405/Zynora) &nbsp;·&nbsp; [👔 Connect on LinkedIn](https://www.linkedin.com/in/ankitshukladev)
 
 <br/>
 
@@ -40,6 +40,7 @@
 - [🗄️ Database Design](#️-database-design)
 - [📡 API Reference](#-api-reference)
 - [⚙️ Getting Started](#️-getting-started)
+- [🚀 Deployment & CI/CD](#-deployment--cicd)
 - [📁 Project Structure](#-project-structure)
 - [🔮 Roadmap](#-roadmap)
 - [👨‍💻 About the Author](#-about-the-author)
@@ -112,7 +113,12 @@ Here is a breakdown of the hardest engineering challenges solved:
 | Category | Technology | Purpose |
 |:---|:---|:---|
 | **Monorepo** | npm workspaces (Turborepo-compatible) | Shared packages across apps |
-| **Containerization** | Docker + Docker Compose | One-command local infrastructure |
+| **Containerization** | Docker + Docker Compose | Backend services (API + Redis) in production |
+| **Process Manager** | PM2 (cluster mode) | Zero-downtime frontend reloads across CPU cores |
+| **Reverse Proxy** | Nginx | HTTPS termination, `/graphql` routing, static asset serving |
+| **TLS / HTTPS** | Let's Encrypt + Certbot | Automated certificate provisioning and renewal |
+| **DNS** | DuckDNS | Custom domain management for VPS |
+| **CI/CD** | GitHub Actions | Automated deploy-on-push to VPS via SSH |
 | **Language** | TypeScript 5 (strict mode) | End-to-end type safety |
 | **Shared Packages** | `packages/models`, `packages/types`, `packages/utils` | DRY code across frontend/backend |
 
@@ -403,6 +409,110 @@ Open [http://localhost:3000](http://localhost:3000) in your browser. 🎉
 
 ---
 
+## 🚀 Deployment & CI/CD
+
+Zynora is deployed to a self-managed Linux VPS with a fully automated pipeline — no manual SSH, no manual restarts.
+
+### 🏭 Production Stack
+
+| Layer | Technology | Role |
+|:---|:---|:---|
+| **Reverse Proxy** | Nginx | HTTPS termination, routes `/graphql` → backend container, serves frontend |
+| **TLS** | Let's Encrypt + Certbot | Auto-renewing certificates, enforces HTTPS redirect |
+| **DNS** | DuckDNS | Custom domain pointing to VPS public IP |
+| **Backend** | Docker Compose (`zynora-backend` + `zynora-redis`) | Containerized API and cache — `restart: always` for resilience |
+| **Frontend** | PM2 in cluster mode | Multi-process Next.js server — zero-downtime reloads on deploy |
+
+### ⚡ CI/CD Pipeline — GitHub Actions
+
+Every push to `main` triggers an automated deployment. No manual steps required.
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: bash ~/deploy.sh
+```
+
+The runner authenticates to the VPS using an **RSA private key stored as a GitHub Actions secret** — no passwords, no manual key exchange beyond initial setup.
+
+### 🔁 Deployment Script — `deploy.sh`
+
+The remote script executes a controlled, ordered deployment sequence:
+
+```bash
+# 1. Pull latest code from GitHub
+git pull origin main
+
+# 2. Rebuild and restart backend containers (API + Redis)
+docker compose -f docker/docker-compose.yml up --build -d
+
+# 3. Install any new frontend dependencies
+cd apps/frontend && npm install
+
+# 4. Build Next.js production bundle
+npm run build
+
+# 5. Reload frontend with zero downtime
+pm2 reload zynora-frontend
+```
+
+**Why `pm2 reload` and not `pm2 restart`?** `reload` performs a rolling restart across worker processes — incoming HTTP requests are held and handed off, never dropped. On a single-node VPS this eliminates the brief downtime that a naive `restart` would cause.
+
+### 🔒 Nginx Configuration
+
+Nginx sits in front of both the frontend and backend, handling:
+
+- **HTTPS enforcement** — HTTP traffic is permanently redirected to HTTPS (301)
+- **API routing** — `location /graphql` is proxied to `localhost:4000` (the Docker container)
+- **Frontend routing** — all other requests are proxied to the PM2 Next.js process (`localhost:3000`)
+- **WebSocket upgrades** — `Upgrade` and `Connection` headers forwarded for future subscription support
+
+### 🔐 Secrets Management
+
+No credentials are stored in the repository. All sensitive values are injected at runtime:
+
+| Secret | Storage |
+|:---|:---|
+| `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` | GitHub Actions Encrypted Secrets |
+| `.env` (DB, JWT, Stripe, AWS keys) | VPS filesystem, outside the repo root |
+| TLS certificates | Managed by Certbot, auto-renewed via cron |
+
+### 📊 Production Deployment Diagram
+
+```mermaid
+graph LR
+    GH["GitHub\n(push to main)"] -->|"Triggers workflow"| GA["GitHub Actions\nRunner"]
+    GA -->|"SSH + RSA key\n(VPS_SSH_KEY secret)"| VPS["Linux VPS"]
+    VPS --> DS["deploy.sh"]
+    DS --> DC["docker compose up --build\n(Backend API + Redis)"]
+    DS --> NB["npm run build\n(Next.js)"]  
+    DS --> PM2["pm2 reload\n(Zero-downtime)"] 
+    
+    subgraph VPS_INFRA["VPS — Production Infrastructure"]
+        NGINX["Nginx\n(HTTPS + Reverse Proxy)"]
+        NGINX -->|"localhost:4000"| DOCKER["Docker: zynora-backend\n(GraphQL Yoga)"]
+        NGINX -->|"localhost:3000"| PM2_FE["PM2 Cluster\n(Next.js)"]  
+        DOCKER --- REDIS["Docker: zynora-redis\n(Redis 7)"]
+    end
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -438,7 +548,11 @@ zynora/
 │   ├── types/                     # ⬡ Shared TypeScript interfaces
 │   └── utils/                     # ⬡ Shared utility functions
 │
-├── docker/                        # Docker Compose for local infrastructure (MongoDB + Redis)
+├── docker/                        # Docker Compose for production (Backend API + Redis)
+│   └── docker-compose.yml         # Defines zynora-backend + zynora-redis services
+├── .github/
+│   └── workflows/
+│       └── deploy.yml             # GitHub Actions CI/CD — triggers deploy.sh on push to main
 └── scripts/                       # Workspace automation scripts
 ```
 

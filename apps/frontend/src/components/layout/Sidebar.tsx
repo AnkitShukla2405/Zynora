@@ -33,7 +33,7 @@ export function Sidebar() {
                     <div className="w-8 h-8 rounded bg-primary flex items-center justify-center text-white font-bold text-xl">
                         Z
                     </div>
-                    <span className="text-xl font-bold text-primary tracking-tight">Zynora</span>
+                    <span className="text-xl font-bold text-primary tracking-tight">Zynora Ecommerce</span>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@ export function Sidebar() {
             {/* Footer / User Info could go here if needed, keeping it clean for now */}
             <div className="p-4 border-t border-border">
                 <div className="text-xs text-gray-400 text-center">
-                    © 2025 Zynora
+                    © 2025 Zynora Ecommerce
                 </div>
             </div>
         </aside>

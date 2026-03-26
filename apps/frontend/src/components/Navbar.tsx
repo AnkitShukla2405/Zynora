@@ -254,7 +254,7 @@ export default function Navbar() {
                   <Store size={22} className="text-[#880808] drop-shadow-sm" />
                 </div>
                 <span className="text-xl lg:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-br from-[#880808] to-[#ce2121] tracking-tight hover:opacity-80 transition-opacity">
-                  Zynora
+                  Zynora Ecommerce
                 </span>
               </div>
             </Link>
@@ -504,7 +504,7 @@ export default function Navbar() {
                   >
                     <div className="p-5 bg-gradient-to-br from-red-50 to-white border-b border-gray-100">
                       <p className="text-base font-black text-gray-900">
-                        Welcome to Zynora!
+                        Welcome to Zynora Ecommerce!
                       </p>
                       <p className="text-xs font-medium text-gray-500 mt-1">
                         Sign in to access your account, orders & wishlist
@@ -597,7 +597,7 @@ export default function Navbar() {
               <Store size={20} className="text-[#880808]" />
             </div>
             <span className="text-xl font-black text-[#880808] tracking-tight">
-              <Link href={"/"}>Zynora</Link>
+              <Link href={"/"}>Zynora Ecommerce</Link>
             </span>
           </div>
           <button

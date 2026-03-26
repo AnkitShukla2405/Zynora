@@ -320,7 +320,7 @@ export default function ZynoraEnterpriseAuth() {
               <PackageCheck className="text-[#FFF8F1]" size={20} />
             </div>
             <span className="text-2xl font-bold tracking-tight text-[#7F1113]">
-              Zynora
+              Zynora Ecommerce
             </span>
           </div>
 
@@ -371,7 +371,7 @@ export default function ZynoraEnterpriseAuth() {
         </div>
 
         <div className="relative z-10 text-xs text-[#8C5E5E]/70 mt-8 font-medium">
-          © 2025 Zynora Retail Pvt Ltd.
+          © 2025 Zynora Ecommerce Retail Pvt Ltd.
         </div>
       </div>
 
@@ -589,7 +589,7 @@ export default function ZynoraEnterpriseAuth() {
             {/* Footer Policy */}
             <div className="mt-8 pt-6 border-t border-[#EAC6C6]/40 text-center">
               <p className="text-xs text-[#8C5E5E]">
-                By continuing, you agree to Zynora's{" "}
+                By continuing, you agree to Zynora Ecommerce's{" "}
                 <a
                   href="#"
                   className="underline decoration-[#7F1113]/30 hover:text-[#7F1113]"

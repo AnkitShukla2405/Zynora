@@ -33,16 +33,20 @@
 ## 📖 Table of Contents
 
 - [🎯 Why Zynora Stands Out](#-why-zynora-stands-out)
+- [📊 Engineering Impact](#-engineering-impact)
 - [🛠️ Tech Stack](#️-tech-stack)
 - [🏗️ System Architecture](#️-system-architecture)
+- [🧠 Key Engineering Decisions](#-key-engineering-decisions)
 - [✨ Core Features](#-core-features)
 - [🔐 Security & Performance](#-security--performance)
 - [🗄️ Database Design](#️-database-design)
 - [📡 API Reference](#-api-reference)
 - [⚙️ Getting Started](#️-getting-started)
 - [🚀 Deployment & CI/CD](#-deployment--cicd)
+- [🧩 Key Challenges Solved](#-key-challenges-solved)
 - [📁 Project Structure](#-project-structure)
 - [🔮 Roadmap](#-roadmap)
+- [💼 For Recruiters](#-for-recruiters)
 - [👨‍💻 About the Author](#-about-the-author)
 
 ---
@@ -59,12 +63,23 @@ Here is a breakdown of the hardest engineering challenges solved:
 |:---|:---|
 | **Race conditions on stock** | Atomic Redis-backed stock reservation with TTL locks — prevents overselling across concurrent checkouts |
 | **Secure token rotation** | Argon2id-hashed refresh tokens stored in MongoDB + Redis; token replay attacks are structurally impossible |
-| **OTP brute-force prevention** | Rate-limited OTP service with configurable Redis TTL for fully stateless session validation |
+| **OTP brute-force prevention** | Sliding window rate limiting using Redis + Lua scripts — atomic, race-condition-free request control |
 | **Order integrity** | Immutable **order snapshot service** — price & seller info captured atomically at purchase time, decoupled from future catalog edits |
 | **Webhook idempotency** | Stripe webhook handler with `stripeEventId` deduplication — no double-processing, ever |
 | **Presigned media uploads** | AWS S3 presigned URL generation for direct client-to-S3 uploads — backend never touches binary data |
 | **Type-safe full-stack** | Shared `packages/types` ensures compile-time safety across the entire monorepo boundary |
 | **Dual payment gateway** | Stripe (global) + Razorpay (INR-native) integrated for maximum market coverage |
+
+---
+
+## 📊 Engineering Impact
+
+- Prevents overselling under concurrent checkout load using atomic Redis TTL locks
+- Sub-millisecond OTP validation with Redis — zero database reads per auth check
+- Eliminates token replay attacks via rotating refresh token architecture with immediate invalidation
+- Guarantees exactly-once payment processing using Stripe webhook `stripeEventId` idempotency
+- Zero-downtime deployments using PM2 cluster `reload` — no dropped requests during releases
+- End-to-end compile-time type safety across frontend and backend via shared monorepo packages
 
 ---
 
@@ -220,6 +235,16 @@ sequenceDiagram
 
 ---
 
+## 🧠 Key Engineering Decisions
+
+- **Modular monolith over microservices** — faster iteration and dramatically lower operational overhead for a solo-built system
+- **Redis locks over database transactions** — sub-millisecond stock reservation without distributed transaction overhead
+- **Order snapshot pattern** — preserves historical pricing integrity, fully decoupled from future catalog mutations
+- **Rotating refresh tokens** — eliminates long-lived session risk; every token use issues a new token and invalidates the last
+- **Presigned S3 uploads** — keeps the backend stateless for media; AWS credentials are never exposed or proxied
+
+---
+
 ## ✨ Core Features
 
 ### 🛍️ Storefront & Discovery
@@ -280,6 +305,17 @@ sequenceDiagram
 | **Apollo Normalized Cache** | Entity-based caching reduces redundant GraphQL round-trips |
 | **GPU-Accelerated Animations** | Framer Motion uses `transform` and `opacity` — never triggers layout reflow |
 | **Monorepo Code Sharing** | Shared `packages/` eliminates duplication and reduces bundle overhead |
+
+---
+
+### 🧠 Advanced Rate Limiting
+
+OTP endpoints are protected by a **sliding window rate limiter implemented via Redis Lua scripts**.
+
+- **Atomic execution** — the Lua script runs as a single Redis command; no race conditions between check and increment
+- **Sliding window** — tracks requests in a rolling time window, not a fixed interval boundary
+- **Burst prevention** — blocks abuse attempts that exploit the reset boundary of fixed-window counters
+- **Scoped enforcement** — limits applied per user identity + device fingerprint, not just IP
 
 ---
 
@@ -513,6 +549,18 @@ graph LR
 
 ---
 
+## 🧩 Key Challenges Solved
+
+| Challenge | Approach |
+|:---|:---|
+| **Concurrent stock reservation** | Atomic Redis `SET NX EX` locks per product SKU — guaranteed single winner under parallel checkouts |
+| **Idempotent payment webhooks** | Store `stripeEventId` on the Order document; duplicate webhook deliveries are silently discarded |
+| **Secure session management** | Token rotation on every refresh — compromised tokens expire on first use |
+| **Device-bound sessions** | FingerprintJS hash stored with each `RefreshToken` — cross-device token reuse is detectable |
+| **Redis ↔ MongoDB consistency** | Stock locks are released in the webhook handler only after MongoDB confirms permanent stock decrement |
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -584,6 +632,20 @@ Contributions are welcome! Here's how to get started:
 5. **Open** a Pull Request
 
 Please follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages and ensure TypeScript compilation succeeds before submitting.
+
+---
+
+## 💼 For Recruiters
+
+This project demonstrates:
+
+- **Production-grade backend architecture** — GraphQL, Redis, MongoDB, Docker, deployed on a live VPS
+- **Advanced system design** — distributed locking, sliding window rate limiting, idempotent event processing
+- **Security-first authentication** — JWT rotation, Argon2id hashing, HttpOnly cookies, device fingerprint binding
+- **Real-world payment integration** — Stripe PaymentIntent lifecycle, webhook verification, Razorpay for INR markets
+- **Automated CI/CD** — GitHub Actions → SSH → Docker + PM2, zero-downtime deployments
+
+> 📬 Open to **Backend / Full-Stack engineering roles**. Let's connect on [LinkedIn](https://www.linkedin.com/in/ankitshukladev).
 
 ---
 

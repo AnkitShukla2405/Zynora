@@ -71,11 +71,13 @@ export function ProductVariants({
     setSelectedAttrs(newSelection)
 
     // Find the exact variant sku that matches ALL currently selected attributes
-    const matchingVariant = variants.find(variant => {
-      return variant.attributes.every(
-        attr => newSelection[attr.key] === attr.value
-      )
-    })
+const matchingVariant = variants.find(variant => {
+  return Object.entries(newSelection).every(([key, value]) =>
+    variant.attributes.some(
+      attr => attr.key === key && attr.value === value
+    )
+  );
+});
 
     if (matchingVariant) {
       onVariantChange(matchingVariant)

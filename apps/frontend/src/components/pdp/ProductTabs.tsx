@@ -51,8 +51,8 @@ export function ProductTabs({
 
       <div className="py-6">
         {activeTab === "description" && (
-          <div className="prose prose-sm max-w-none text-gray-600 space-y-4">
-            <p>{description}</p>
+          <div className="prose prose-sm max-w-none text-gray-600 space-y-4 whitespace-pre-line">
+            {description}
           </div>
         )}
 

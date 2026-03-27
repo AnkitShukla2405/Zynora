@@ -11,6 +11,7 @@ import { useQuery } from "@apollo/client/react";
 import { useSearchParams } from "next/navigation";
 import Loader from "@/components/Loader";
 import { Suspense } from "react";
+import ProductNotFound from "../notFound/notFound";
 
 type SearchResponse = {
   search: {
@@ -97,6 +98,8 @@ export default function SearchPage() {
   });
 
   if (loading) return <Loader />;
+
+  if(!data?.search?.products?.length) return <ProductNotFound />
 
 
 

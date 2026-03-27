@@ -115,7 +115,7 @@ export function ProductCard({product}: ProductCardProps) {
               </span>
             )}
             <div className="text-sm font-bold text-gray-900">
-              ${product?.price?.toLocaleString()}
+             ₹{product?.price?.toLocaleString()}
             </div>
           </div>
 

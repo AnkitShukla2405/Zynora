@@ -42,8 +42,18 @@ const redirectToSignup = () => {
   if (typeof window === "undefined") return;
   const AUTH_PAGES = ["/signup", "/login"];
   const currentPath = window.location.pathname;
-  if (AUTH_PAGES.includes(currentPath)) return; // already on auth page, don't loop
+  if (AUTH_PAGES.includes(currentPath)) return;
   window.location.href = `/signup?callbackUrl=${encodeURIComponent(
+    currentPath + window.location.search
+  )}`;
+};
+
+const redirectToSellerAuth = () => {
+  if (typeof window === "undefined") return;
+  const AUTH_PAGES = ["/auth/signup", "/auth/login"];
+  const currentPath = window.location.pathname;
+  if (AUTH_PAGES.includes(currentPath)) return; 
+  window.location.href = `/auth/signup?callbackUrl=${encodeURIComponent(
     currentPath + window.location.search
   )}`;
 };
@@ -67,6 +77,15 @@ const authErrorLink = new ErrorLink(({ error, operation, forward }) => {
   const isUnauthenticated = error.errors.some(
     (e) => e.extensions?.code === "UNAUTHENTICATED"
   );
+
+  const isSeller = error.errors.some(
+    (e) => e.extensions?.code === "FORBIDDEN"
+  );
+
+  if (isSeller && !isUnauthenticated) {
+    redirectToSellerAuth();
+    return;
+  }
 
   if (!isUnauthenticated || skipAuth) return forward(operation);
 

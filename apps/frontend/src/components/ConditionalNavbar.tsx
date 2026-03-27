@@ -13,6 +13,18 @@ export default function ConditionalNavbar() {
     if (pathname.startsWith("/auth")) {
     return null;
   }
+
+  if (pathname.startsWith("/signup")) {
+    return null;
+  }
+
+  if (pathname.startsWith("/payment/success")) {
+    return null;
+  }
+
+  if (pathname.startsWith("/payment/cancel")) {
+    return null;
+  }
   
 
   return <Navbar />;

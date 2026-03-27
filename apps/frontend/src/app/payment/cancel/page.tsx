@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { XCircle, ArrowLeft, RefreshCw, ShoppingCart } from 'lucide-react';
+import { Suspense } from 'react';
 
 /**
  * PaymentCancelContent Component

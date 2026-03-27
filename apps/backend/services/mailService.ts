@@ -5,7 +5,7 @@ export const MailService = {
   sendOtpMail: async (email: string, otp: string) => {
     try {
       const response = await resend.emails.send({
-        from: "Zynora <onboarding@resend.dev>",
+        from: "Zynora <hello@ankitshukla.dev>",
         to: email,
         subject: "Your OTP Code",
         html: `

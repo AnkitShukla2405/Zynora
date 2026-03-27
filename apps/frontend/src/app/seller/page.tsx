@@ -15,6 +15,7 @@ import { useState } from "react";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client/react";
 import Loader from "@/components/Loader";
+import UnauthorizedSeller from "@/components/unauthorizedSeller/Unauthorized";
 
 type MetricsResponse = {
   getProductMetrics: {
@@ -50,7 +51,7 @@ if (loading) {
   return <Loader />
 }
 
-  if (!data) return null; 
+  if (!data) return <UnauthorizedSeller redirectLink={"/sellerRegistration"} />; 
 
 
   const {

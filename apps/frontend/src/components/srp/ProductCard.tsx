@@ -111,7 +111,7 @@ export function ProductCard({product}: ProductCardProps) {
           <div>
             {product.originalPrice && product.originalPrice > product.price && (
               <span className="text-xs text-gray-500 line-through">
-                ${product.originalPrice.toLocaleString()}
+                ₹{product.originalPrice.toLocaleString()}
               </span>
             )}
             <div className="text-sm font-bold text-gray-900">

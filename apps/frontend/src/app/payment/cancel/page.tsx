@@ -1,6 +1,7 @@
 "use client";
 
-import React, { Suspense } from 'react';
+
+
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { XCircle, ArrowLeft, RefreshCw, ShoppingCart } from 'lucide-react';
@@ -13,6 +14,7 @@ import { XCircle, ArrowLeft, RefreshCw, ShoppingCart } from 'lucide-react';
 const PaymentCancelContent = () => {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id');
+
 
   return (
     <div className="max-w-md w-full bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-100 text-center">

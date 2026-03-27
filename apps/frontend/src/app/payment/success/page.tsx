@@ -46,7 +46,7 @@ const PaymentSuccessContent = () => {
       {/* Action Buttons */}
       <div className="flex flex-col gap-3">
         <Link
-          href="/dashboard/orders"
+          href="/orders"
           className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
         >
           Go to Orders
@@ -54,7 +54,7 @@ const PaymentSuccessContent = () => {
         </Link>
         
         <Link
-          href="/shop"
+          href="/"
           className="w-full py-3 px-4 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl border border-slate-200 transition-all flex items-center justify-center gap-2"
         >
           <ShoppingBag className="w-4 h-4" />

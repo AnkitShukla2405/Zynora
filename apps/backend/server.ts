@@ -67,8 +67,6 @@ const proto =
 
 console.log("PROTO:", proto);
       const { request } = ctx;
-
-      console.log("Request:", request)
       const cookieHeader = request.headers.get("cookie") || "";
       const cookies = parse(cookieHeader);
 

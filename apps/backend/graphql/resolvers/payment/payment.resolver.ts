@@ -4,7 +4,11 @@ import { getUserCartItem } from "@/utils/cart/loggedInUserCart";
 import createOrderSnapshot from "@/services/createOrderSnapshot";
 import Stripe from "stripe";
 import { fail } from "@/helper/cartItem";
+<<<<<<< HEAD
 import reserveStock, { getReservedStock } from "@/services/stockReservation.services";
+=======
+import reserveStock from "@/services/stockReservation.services";
+>>>>>>> 8830db2 (removed request console)
 
 import { GraphQLError } from "graphql/error/GraphQLError";
 

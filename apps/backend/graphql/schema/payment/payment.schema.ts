@@ -13,7 +13,20 @@ type PaymentResponse {
   checkoutUrl: String
 }
 
+type BuyNowResponse {
+    success: Boolean
+    message: String
+}
+
+input BuyNowInput {
+    productId: ID!
+    variantId: ID!
+    quantity: Int!
+}
+
+
 type Mutation {
+    buyNow(input: BuyNowInput!): BuyNowResponse!
     proceedToPayment(selectedAddressId: ID!): PaymentResponse!
 }
 `

@@ -4,6 +4,7 @@ import { getUserCartItem } from "@/utils/cart/loggedInUserCart";
 import createOrderSnapshot from "@/services/createOrderSnapshot";
 import Stripe from "stripe";
 import { fail } from "@/helper/cartItem";
+import reserveStock, { getReservedStock } from "@/services/stockReservation.services";
 
 import { GraphQLError } from "graphql/error/GraphQLError";
 
@@ -14,6 +15,12 @@ if (!secretKey) {
 }
 
 const stripe = new Stripe(secretKey);
+
+interface BuyNowInput {
+  productId: string;
+  variantId: string;
+  quantity: number;
+}
 
 export const paymentResolver = {
   Mutation: {
@@ -53,7 +60,7 @@ export const paymentResolver = {
       }
 
       try {
-        const cartItems = await getUserCartItem(user._id);
+        const cartItems = await getReservedStock(user._id);
 
         if (cartItems.length === 0) {
           throw new GraphQLError("Cart is empty", {
@@ -177,5 +184,35 @@ export const paymentResolver = {
         }
       }
     },
+
+    buyNow: async (_: unknown, { input }: { input: BuyNowInput }, { user }: any) => {
+      if (!user)
+        throw new GraphQLError("User not authenticated", {
+          extensions: { code: "UNAUTHENTICATED" },
+        });
+
+        const reserve = await reserveStock({
+          userId: user._id,
+          items: [
+            {
+              productId: input.productId,
+              variantId: input.variantId,
+              quantity: input.quantity,
+            },
+          ],
+        });
+
+        if (!reserve.success) {
+          throw new Error("Stock reservation failed");
+        }
+
+        const response = {
+          success: true,
+          message: "Stock reserved successfully for Buy Now",
+        };
+        
+        return response;
+
+    }
   },
 };

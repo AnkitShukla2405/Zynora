@@ -5,6 +5,7 @@ import { Order } from "@/model/orders.model";
 import { fail } from "@/helper/cartItem";
 import { Address } from "@/model/userAddress.model";
 import { GraphQLError } from "graphql/error/GraphQLError";
+import { getReservedStock } from "./stockReservation.services";
 
 export default async function createOrderSnapshot(userId: string, selectedAddressId: string, idemkey: string) {
 
@@ -14,7 +15,7 @@ if (!selectedAddressId) {
   });
 }
   
-  const items = await getUserCartItem(userId);
+  const items = await getReservedStock(userId);
 
   if (!items.length) {
   throw new GraphQLError("Cart is empty", {

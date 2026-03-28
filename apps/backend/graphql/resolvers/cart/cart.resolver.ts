@@ -17,7 +17,7 @@ import {
 } from "@/utils/cart/cartHelper";
 import { mergeCarts } from "@/utils/cart/mergeCart";
 import client from "@/lib/redis";
-import reserveStock from "@/services/stockReservation.services";
+import reserveStock, { getReservedStock } from "@/services/stockReservation.services";
 import { serialize } from "cookie";
 import { GraphQLError } from "graphql/error/GraphQLError";
 
@@ -86,12 +86,8 @@ export const cartResolver = {
           extensions: { code: "UNAUTHENTICATED" },
         });
 
-      if (!user.roles.includes("USER")) {
-        throw new GraphQLError("Unauthorized", {
-          extensions: { code: "FORBIDDEN" },
-        });
-      }
-      const cartItem = await getUserCartItem(user._id);
+
+      const cartItem = await getReservedStock(user._id)
       if (!cartItem || cartItem.length === 0) {
         return [];
       }

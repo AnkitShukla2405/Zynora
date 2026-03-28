@@ -19,8 +19,11 @@ export default async function reserveStock({
   const successfullyReserved: CartItem[] = [];
   try {
     for (const item of items) {
+      console.log("RESERVING ITEM:", item);
       const globalKey = `stock:reserved:variant:${item.variantId}`;
       const userKey = `stock:reserved:user:${userId}:${item.variantId}`;
+      const userSetKey: string = `stock:reserved:user:${userId}:variants`;
+      const userMetaKey = `stock:reserved:user:${userId}:meta`;
 
       const dbStock = dbStockMap.get(item.variantId);
 
@@ -47,7 +50,11 @@ export default async function reserveStock({
         tx.incrBy(globalKey, item.quantity)
           .expire(globalKey, RESERVATION_TTL)
           .incrBy(userKey, item.quantity)
-          .expire(userKey, RESERVATION_TTL);
+          .expire(userKey, RESERVATION_TTL)
+          .sAdd(userSetKey, item.variantId)
+          .expire(userSetKey, RESERVATION_TTL)
+          .hSet(userMetaKey, item.variantId, item.productId)
+          .expire(userMetaKey, RESERVATION_TTL);
 
         const result = await tx.exec();
 
@@ -77,13 +84,54 @@ export default async function reserveStock({
       for (const item of successfullyReserved) {
         const globalKey = `stock:reserved:variant:${item.variantId}`;
         const userKey = `stock:reserved:user:${userId}:${item.variantId}`;
+        const userSetKey: string = `stock:reserved:user:${userId}:variants`;
+        const userMetaKey = `stock:reserved:user:${userId}:meta`;
 
         rollbackTx.decrBy(globalKey, item.quantity);
         rollbackTx.decrBy(userKey, item.quantity);
+        rollbackTx.sRem(userSetKey, item.variantId);
+        rollbackTx.hDel(userMetaKey, item.variantId);
       }
 
       await rollbackTx.exec();
     }
-    throw error
+    throw error;
   }
+}
+
+export async function getReservedStock(userId: string) {
+  const userSetKey: string = `stock:reserved:user:${userId}:variants`;
+  const userMetaKey = `stock:reserved:user:${userId}:meta`;
+
+  const raw = await client.sMembers(userSetKey);
+
+  const variantIds = Array.from(raw).map((v) => (Array.isArray(v) ? v[0] : v));
+
+  const pipeline = client.multi();
+
+  variantIds.forEach((variantId: string) => {
+    const userKey = `stock:reserved:user:${userId}:${variantId}`;
+    pipeline.get(userKey);
+    pipeline.hGet(userMetaKey, variantId);
+  });
+
+  const results = await pipeline.exec();
+
+  console.log("RAW REDIS RESULTS:", results);
+
+  if (!results) return [];
+
+  const final = [];
+
+  for (let i = 0; i < variantIds.length; i++) {
+    const quantity = Number(results?.[i * 2] || 0);
+    const productId = results?.[i * 2 + 1];
+
+    final.push({
+      productId,
+      variantId: variantIds[i],
+      quantity,
+    });
+  }
+  return final;
 }

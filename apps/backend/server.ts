@@ -65,7 +65,6 @@ const proto =
     ? "https"
     : "http";
 
-console.log("PROTO:", proto);
       const { request } = ctx;
       const cookieHeader = request.headers.get("cookie") || "";
       const cookies = parse(cookieHeader);

@@ -24,8 +24,8 @@ type CartResult {
 }
 
 type CartDataResponse {
-        result: [CartResult!]!
-        cartLength: Int!
+        result: [CartResult!]
+        cartLength: Int
 }
 
 type ChangeCartQuantityResponse {
@@ -41,7 +41,7 @@ type CheckoutReesponse {
 }
 
 type Query {
-  getCartData: CartDataResponse!
+  getCartData: CartDataResponse
   getCheckoutCartData: [CartResult!]!
 }
 

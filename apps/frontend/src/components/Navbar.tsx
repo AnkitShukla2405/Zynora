@@ -182,7 +182,9 @@ export default function Navbar() {
     context: { skipAuth: true },
   });
 
-    const { data: userData, loading: userLoading, error } = useQuery<GetUserInfoResponse>(GET_USER_INFO);
+    const { data: userData, loading: userLoading, error } = useQuery<GetUserInfoResponse>(GET_USER_INFO, {
+      context: { skipAuth: true },
+    });
 
   const [logout] = useMutation<LogoutResponse>(LOGOUT);
 

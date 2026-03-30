@@ -261,14 +261,14 @@ export default function ZynoraEnterpriseAuth() {
 
   const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData("text").slice(0, 4).split("");
+    const pastedData = e.clipboardData.getData("text").slice(0, 6).split("");
     if (pastedData.every((char) => !isNaN(Number(char)))) {
       const newOtp = [...otp];
       pastedData.forEach((digit, i) => {
-        if (i < 4) newOtp[i] = digit;
+        if (i < 6) newOtp[i] = digit;
       });
       setOtp(newOtp);
-      otpInputRefs.current[Math.min(pastedData.length, 3)]?.focus();
+      otpInputRefs.current[Math.min(pastedData.length, 5)]?.focus();
     }
   };
 
@@ -554,7 +554,7 @@ export default function ZynoraEnterpriseAuth() {
                   <button
                     onClick={() => {
                       setStep(1);
-                      setOtp(["", "", "", ""]);
+                      setOtp(["", "", "", "", "", ""]);
                     }}
                     className="text-[#8C5E5E] hover:text-[#3E1F21] font-medium transition-colors"
                   >

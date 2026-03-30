@@ -30,7 +30,7 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import Loader from "@/components/Loader";
 import toast from "react-hot-toast";
 
-const GET_USER_INFO = gql`
+export const GET_USER_INFO = gql`
   query GetUserInfo {
     getUserInfo {
       userData {

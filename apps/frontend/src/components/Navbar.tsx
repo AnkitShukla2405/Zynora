@@ -30,6 +30,17 @@ import { gql } from "@apollo/client";
 import { useLazyQuery } from "@apollo/client/react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { GET_USER_INFO } from "@/app/profile/page";
+
+type GetUserInfoResponse = {
+  getUserInfo: {
+    userData: {
+      name: string;
+      email: string;
+    };
+  };
+};
+
 
 type SearchSuggestion = {
   text: string;
@@ -170,6 +181,8 @@ export default function Navbar() {
     fetchPolicy: "network-only",
     context: { skipAuth: true },
   });
+
+    const { data: userData, loading: userLoading, error } = useQuery<GetUserInfoResponse>(GET_USER_INFO);
 
   const [logout] = useMutation<LogoutResponse>(LOGOUT);
 
@@ -457,7 +470,7 @@ export default function Navbar() {
                   >
                     <div className="p-5 bg-gradient-to-br from-red-50 to-white border-b border-gray-100">
                       <p className="text-base font-black text-gray-900">
-                        Welcome User!
+                        Welcome {userData?.getUserInfo?.userData?.name}
                       </p>
                       <p className="text-xs font-medium text-gray-500 mt-1">
                         Access your account & orders
@@ -621,7 +634,7 @@ export default function Navbar() {
                   Welcome, User!
                 </p>
                 <p className="text-xs text-gray-500 font-medium">
-                  user@example.com
+                  {userData?.getUserInfo?.userData?.email}
                 </p>
               </div>
             </div>

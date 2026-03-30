@@ -507,9 +507,9 @@ export default function ZynoraEnterpriseAuth() {
 
             {/* STEP 2: OTP FORM */}
             {step === 2 && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-300">
+              <div className="flex-1 flex flex-col animate-in fade-in slide-in-from-right-4 duration-300">
                 <div
-                  className="flex justify-between sm:justify-between gap-2 sm:gap-4 mb-6 sm:mb-8"
+                  className="flex justify-center gap-2 sm:gap-3 mb-8 w-full"
                   onPaste={handlePaste}
                 >
                   {otp.map((digit, idx) => (
@@ -541,7 +541,7 @@ export default function ZynoraEnterpriseAuth() {
                 <button
                   onClick={verifyOtp}
                   disabled={otp.some((d) => !d) || isLoading}
-                  className="w-full py-3 sm:py-4 bg-[#7F1113] text-[#FFF8F1] rounded-xl font-bold text-base sm:text-lg hover:bg-[#680e0f] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] transition-all shadow-xl shadow-[#7F1113]/20 flex items-center justify-center gap-2 mb-5 sm:mb-6"
+                  className="w-full py-3 sm:py-4 bg-[#7F1113] text-[#FFF8F1] rounded-xl font-bold text-base sm:text-lg hover:bg-[#680e0f] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] transition-all shadow-lg shadow-black/10 flex items-center justify-center gap-2 mb-5 sm:mb-6"
                 >
                   {isLoading ? (
                     <Loader2 className="animate-spin" size={24} />

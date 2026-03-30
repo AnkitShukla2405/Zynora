@@ -727,7 +727,7 @@ export default function Navbar() {
 
         {/* Drawer Footer */}
         <div className="p-5 border-t border-gray-100 bg-gray-50 mt-auto">
-          {userData?.getUserInfo?.userData.name && userData?.getUserInfo?.userData?.email ? (
+          {userData?.getUserInfo?.userData?.name && userData?.getUserInfo?.userData?.email ? (
             <button
             onClick={handLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-red-600 font-bold bg-white border border-red-100 hover:bg-red-50 transition-colors"
@@ -738,7 +738,7 @@ export default function Navbar() {
             onClick={() => router.push("/signup")}
             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-red-600 font-bold bg-white border border-red-100 hover:bg-red-50 transition-colors"
           >
-            <LogInIcon size={18} /> Logout
+            <LogInIcon size={18} /> Login
           </button>}
         </div>
       </div>

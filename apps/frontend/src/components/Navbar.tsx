@@ -578,7 +578,7 @@ export default function Navbar() {
                   className={`absolute right-0 top-full w-56 bg-white rounded-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] border border-gray-100/50 overflow-hidden transform transition-all duration-300 origin-top-right z-50 ${isMenuOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-2 pointer-events-none"}`}
                 >
                   <ul className="p-2 space-y-1">
-                    <Link href={"/auth/signin"}  className="px-4 py-2.5 rounded-xl hover:bg-gray-50 hover:shadow-inner cursor-pointer flex items-center gap-3 text-sm font-semibold text-gray-600 hover:text-[#880808] transition-all">
+                    <Link href={"/seller"}  className="px-4 py-2.5 rounded-xl hover:bg-gray-50 hover:shadow-inner cursor-pointer flex items-center gap-3 text-sm font-semibold text-gray-600 hover:text-[#880808] transition-all">
                       <UserStar size={16} className="text-amber-500" /> Become a
                       Seller
                     </Link>
@@ -633,7 +633,7 @@ export default function Navbar() {
               </div>
               <div>
                 <p className="font-bold text-gray-900 leading-tight">
-                  Welcome, User!
+                  Welcome, {userData?.getUserInfo?.userData?.name}
                 </p>
                 <p className="text-xs text-gray-500 font-medium">
                   {userData?.getUserInfo?.userData?.email}
@@ -706,7 +706,7 @@ export default function Navbar() {
             <ul className="space-y-1">
               <li>
                 <Link
-                  href={"/auth/signin"}
+                  href={"/seller"}
                   className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-colors"
                 >
                   <UserStar size={18} className="text-amber-500" /> Become a
@@ -727,12 +727,19 @@ export default function Navbar() {
 
         {/* Drawer Footer */}
         <div className="p-5 border-t border-gray-100 bg-gray-50 mt-auto">
-          <button
+          {userData?.getUserInfo?.userData.name && userData?.getUserInfo?.userData?.email ? (
+            <button
             onClick={handLogout}
             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-red-600 font-bold bg-white border border-red-100 hover:bg-red-50 transition-colors"
           >
             <LogOut size={18} /> Logout
           </button>
+          ): <button
+            onClick={() => router.push("/signup")}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-red-600 font-bold bg-white border border-red-100 hover:bg-red-50 transition-colors"
+          >
+            <LogInIcon size={18} /> Logout
+          </button>}
         </div>
       </div>
     </>

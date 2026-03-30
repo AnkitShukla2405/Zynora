@@ -509,7 +509,7 @@ export default function ZynoraEnterpriseAuth() {
             {step === 2 && (
               <div className="animate-in fade-in slide-in-from-right-4 duration-300">
                 <div
-                  className="flex justify-center gap-2 sm:gap-4"
+                  className="flex justify-between sm:justify-between gap-2 sm:gap-4 mb-6 sm:mb-8"
                   onPaste={handlePaste}
                 >
                   {otp.map((digit, idx) => (

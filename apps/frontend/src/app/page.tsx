@@ -1130,7 +1130,7 @@ export default function Home() {
               </div>
               <div className="flex gap-4">
                 <Link
-                href={"/seller/auth/signin"}
+                href={"/seller"}
                   className="flex items-center gap-2 bg-[#880808] hover:bg-[#6d0606] text-white font-bold px-7 py-3.5 rounded-2xl hover:scale-105 transition-all text-sm"
                   style={{ boxShadow: "0 8px 30px rgba(136,8,8,0.30)" }}
                 >

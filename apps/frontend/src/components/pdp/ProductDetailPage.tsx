@@ -115,30 +115,39 @@ export default function ProductDetailsClient({
   slug: string;
   id: string;
 }) {
-  const { data, loading, error } = useQuery<GetPdpData, GetPdpVars>(GET_PDP_DATA, {
-    variables: { slug, id },
-    context: {skipAuth: true}
-  });
+  const { data, loading, error } = useQuery<GetPdpData, GetPdpVars>(
+    GET_PDP_DATA,
+    {
+      variables: { slug, id },
+      context: { skipAuth: true },
+    },
+  );
 
   useEffect(() => {
-  if (error) {
-    console.error("GraphQL Error:", error);
-    toast.error(error.message || "Something went wrong");
-  }
-}, [error]);
+    if (error) {
+      console.error("GraphQL Error:", error);
+      toast.error(error.message || "Something went wrong");
+    }
+  }, [error]);
 
   const product = data?.getPdp;
 
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null);
   const [isReturnable, setIsReturnable] = useState(false);
 
-  
-
   useEffect(() => {
     if (product?.variants?.length) {
       setSelectedVariant(product.variants[0]);
     }
   }, [product]);
+
+
+useEffect(() => {
+  if (!loading) {
+    window.scrollTo(0, 0);
+  }
+}, [loading]);
+
 
   useEffect(() => {
     if (product?.isReturnable) {
@@ -152,8 +161,8 @@ export default function ProductDetailsClient({
 
   if (loading) return <Loader />;
   if (error) return <div>Error loading product</div>;
-  if (!product) return null; 
-  if (!selectedVariant) return <Loader/>;
+  if (!product) return null;
+  if (!selectedVariant) return <Loader />;
 
   return (
     <div className="min-h-screen bg-[#F9F8F6] py-8 md:py-12">
@@ -161,13 +170,30 @@ export default function ProductDetailsClient({
         {/* Breadcrumb (simplified) */}
         <nav className="mb-6 text-sm text-gray-500">
           <ol className="flex items-center gap-2">
-            <Link href={"/"}  className="hover:text-gray-900 cursor-pointer">Home</Link >
+            <Link href={"/"} className="hover:text-gray-900 cursor-pointer">
+              Home
+            </Link>
             <li>/</li>
-            <Link href={`/search?category=${product.category}`}  className="hover:text-gray-900 cursor-pointer">{product.category}</Link >
+            <Link
+              href={`/search?category=${product.category}`}
+              className="hover:text-gray-900 cursor-pointer"
+            >
+              {product.category}
+            </Link>
             <li>/</li>
-            <Link href={`/search?q=${product.subCategory}`}  className="hover:text-gray-900 cursor-pointer">{product.subCategory}</Link >
+            <Link
+              href={`/search?q=${product.subCategory}`}
+              className="hover:text-gray-900 cursor-pointer"
+            >
+              {product.subCategory}
+            </Link>
             <li>/</li>
-            <Link href={`/search?q=${product.productType}`}  className="hover:text-gray-900 cursor-pointer">{product.productType}</Link >
+            <Link
+              href={`/search?q=${product.productType}`}
+              className="hover:text-gray-900 cursor-pointer"
+            >
+              {product.productType}
+            </Link>
           </ol>
         </nav>
 

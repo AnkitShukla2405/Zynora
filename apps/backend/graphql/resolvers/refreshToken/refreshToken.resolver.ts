@@ -82,7 +82,7 @@ export const refreshResolver = {
       } catch (error: any) {
         await ctx.request.cookieStore.set("accessToken", "", {
           httpOnly: true,
-          secure: false,
+          secure: true,
           sameSite: "none",
           path: "/",
           maxAge: 0, // 👈 clear

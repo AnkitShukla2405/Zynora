@@ -99,7 +99,8 @@ export const refreshResolver = {
       }
     },
 
-    logout: async (_: any, __: any, { request, res, user }: any) => {
+    logout: async (_: any, __: any, ctx: any) => {
+      const { request, user } = ctx;
       if (!user) {
         throw new GraphQLError("User not authenticated", {
           extensions: { code: "UNAUTHENTICATED" },
@@ -117,19 +118,34 @@ export const refreshResolver = {
             process.env.ZYNORA_JWT_REFRESH_SECRET!,
           ) as { tokenId: string };
 
-          await RefreshToken.deleteOne({ tokenId: decoded.tokenId });
+          await RefreshToken.deleteMany({ userID: user._id });
         }
       } catch (error) {
         console.error("Logout error:", error);
       }
 
+      user.tokenVersion += 1;
+      await user.save();
+
+      await ctx.request.cookieStore.set("accessToken", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 0,
+      });
+
+      await ctx.request.cookieStore.set("refreshToken", "", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 0,
+      });
+
       return {
         success: true,
         message: "Logged out successfully",
-        cookies: [
-          serialize("accessToken", "", { maxAge: 0, path: "/" }),
-          serialize("refreshToken", "", { maxAge: 0, path: "/" }),
-        ],
       };
     },
   },
